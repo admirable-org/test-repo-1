@@ -1,8 +1,8 @@
 name: PR
 
 on:
-  push:
-    branches: [update-test-report-action]
+  pull_request:
+    branches: ['*'']
 
 jobs:
   changes:
