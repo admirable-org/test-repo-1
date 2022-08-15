@@ -4,6 +4,7 @@ on:
       should-execute:
         description: 'Only execute this if there are changes'
         required: true
+        type: string
 
 jobs:
   validate:
