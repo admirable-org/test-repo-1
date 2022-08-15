@@ -36,6 +36,6 @@ jobs:
 
   test:
     uses: ./.github/workflows/_test.yml
-    needs: [changes, yay]
+    needs: [changes, yay, test-echo]
     with:
       should-execute: ${{ (needs.yay.result == 'success' || needs.yay.result == 'skipped') && needs.changes.outputs.all == 'true'}}
