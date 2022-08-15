@@ -36,7 +36,7 @@ jobs:
     needs: [changes, yay, yay2]
     env:
       RESULT: ${{ needs.yay.result == 'success' || needs.yay.result == 'skipped' }}
-      RESULT2: ${{ needs.yay2result == 'success' || needs.yay2.result == 'skipped' }}
+      RESULT2: ${{ needs.yay2.result == 'success' || needs.yay2.result == 'skipped' }}
     steps:
     - run: |
         echo $RESULT
