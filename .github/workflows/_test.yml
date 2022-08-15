@@ -4,11 +4,10 @@ on:
       should-execute:
         description: 'Only execute this if there are changes'
         required: true
-        type: boolean
 
 jobs:
   validate:
-    if: ${{ inputs.should-execute }}
+    if: inputs.should-execute
     runs-on: ubuntu-latest
     steps:
     - run: |
