@@ -9,14 +9,14 @@ jobs:
   changes:
     runs-on: ubuntu-latest
     outputs:
-      bifrost: ${{ steps.filter.outputs.bifrost }}
+      anything: ${{ steps.filter.outputs.anything }}
     steps:
     # For pull requests it's not necessary to checkout the code
     - uses: dorny/paths-filter@v2
       id: filter
       with:
         filters: |
-          bifrost:
+          anything:
             - '**'
 
   yay:
@@ -25,9 +25,17 @@ jobs:
     - run: |
         echo "yay!"
 
+  test-echo:
+    runs-on: ubuntu-latest
+    needs: [changes, yay]
+    env:
+      RESULT: ${{ needs.yay.result == 'success' || needs.yay.result == 'skipped' }}
+    steps:
+    - run: |
+        echo $RESULT
+
   test:
     uses: ./.github/workflows/_test.yml
     needs: [changes, yay]
     with:
-      should-execute: ${{(needs.validate-dev.result == 'success' || needs.validate-dev.result == 'skipped') && needs.changes.outputs.dev == 'true'}}
-
+      should-execute: ${{ (needs.yay.result == 'success' || needs.yay.result == 'skipped') && needs.changes.outputs.all == 'true'}}
