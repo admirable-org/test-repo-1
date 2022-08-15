@@ -44,8 +44,7 @@ jobs:
 
   test:
     if: |
-      (needs.yay.result == 'success' || needs.yay.result == 'skipped') 
-      && false 
+      (needs.yay.result == 'success' || needs.yay.result == 'skipped')
       && (needs.yay2.result == 'success' || needs.yay2.result == 'skipped') 
       && needs.changes.outputs.all == 'true'
     uses: ./.github/workflows/_test.yml
