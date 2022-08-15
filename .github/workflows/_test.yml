@@ -1,0 +1,15 @@
+on:
+  workflow_call:
+    inputs:
+      should-execute:
+        description: 'Only execute this if there are changes'
+        required: true
+        type: boolean
+
+jobs:
+  validate:
+    if: ${{ inputs.should-execute }}
+    runs-on: ubuntu-latest
+    steps:
+    - run: |
+        echo "success!"

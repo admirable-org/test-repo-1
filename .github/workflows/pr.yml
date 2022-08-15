@@ -1,0 +1,32 @@
+name: PR
+
+on:
+  push:
+    branches: [update-test-report-action]
+
+jobs:
+  changes:
+    runs-on: ubuntu-latest
+    outputs:
+      bifrost: ${{ steps.filter.outputs.bifrost }}
+    steps:
+    # For pull requests it's not necessary to checkout the code
+    - uses: dorny/paths-filter@v2
+      id: filter
+      with:
+        filters: |
+          bifrost:
+            - '**'
+
+  yay:
+    runs-on: ubuntu-latest
+    steps:
+    - run: |
+        echo "yay!"
+
+  test:
+    uses: ./.github/workflows/_test.yml
+    needs: [changes, yay]
+    with:
+      should-execute: ${{(needs.validate-dev.result == 'success' || needs.validate-dev.result == 'skipped') && needs.changes.outputs.dev == 'true'}}
+
