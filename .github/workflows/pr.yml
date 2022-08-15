@@ -25,6 +25,12 @@ jobs:
     - run: |
         echo "yay!"
 
+  yay2:
+    runs-on: ubuntu-latest
+    steps:
+    - run: |
+        echo "yay!"
+
   test-echo:
     runs-on: ubuntu-latest
     needs: [changes, yay]
@@ -36,6 +42,9 @@ jobs:
 
   test:
     uses: ./.github/workflows/_test.yml
-    needs: [changes, yay, test-echo]
+    needs: [changes, yay, yay2, test-echo]
     with:
-      should-execute: ${{ (needs.yay.result == 'success' || needs.yay.result == 'skipped') && needs.changes.outputs.all == 'true'}}
+      should-execute: |
+        ${{ (needs.yay.result == 'success' || needs.yay.result == 'skipped') &&
+        (needs.yay2.result == 'success' || needs.yay2.result == 'skipped') &&
+        && needs.changes.outputs.all == 'true'}}
