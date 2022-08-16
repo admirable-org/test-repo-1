@@ -1,0 +1,51 @@
+name: PR
+
+on:
+  pull_request:
+    branches:
+      - 'main'
+
+jobs:
+  changes:
+    runs-on: ubuntu-latest
+    outputs:
+      anything: ${{ steps.filter.outputs.anything }}
+    steps:
+    # For pull requests it's not necessary to checkout the code
+    - uses: dorny/paths-filter@v2
+      id: filter
+      with:
+        filters: |
+          anything:
+            - '**'
+
+  yay:
+    runs-on: ubuntu-latest
+    steps:
+    - run: |
+        echo "yay!"
+
+  yay2:
+    runs-on: ubuntu-latest
+    steps:
+    - run: |
+        echo "yay!"
+
+  test-echo:
+    runs-on: ubuntu-latest
+    needs: [changes, yay, yay2]
+    env:
+      RESULT: ${{ needs.yay.result == 'success' || needs.yay.result == 'skipped' }}
+      RESULT2: ${{ needs.yay2.result == 'success' || needs.yay2.result == 'skipped' }}
+    steps:
+    - run: |
+        echo $RESULT
+        echo $RESULT2
+
+  test:
+    if: |
+      (needs.yay.result == 'success' || needs.yay.result == 'skipped')
+      && (needs.yay2.result == 'success' || needs.yay2.result == 'skipped') 
+      && needs.changes.outputs.anything == 'true'
+    uses: ./.github/workflows/_test.yml
+    needs: [changes, yay, yay2, test-echo]
